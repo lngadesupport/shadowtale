@@ -4,7 +4,7 @@
 
 [![Target](https://img.shields.io/badge/Hytale-0.6.8-blue)](https://docs.hytale.com/assets/)
 [![Type](https://img.shields.io/badge/Type-Asset%20Pack-purple)](#arquitetura)
-[![Status](https://img.shields.io/badge/Status-Foundation%20implemented%20%7C%20Visual%20implementation%20pending-orange)](#status-atual)
+[![Status](https://img.shields.io/badge/Status-Foundation%20%2B%20Asset%20Audit%20implemented-orange)](#status-atual)
 
 ShadowTale é um **overhaul gráfico cinematográfico para Hytale**, desenvolvido exclusivamente como **Asset Pack**.
 
@@ -241,11 +241,11 @@ A intenção é evitar dois extremos:
 
 O desenvolvimento visual seguirá esta ordem:
 
-### 1. Environment / iluminação / atmosfera
-A base de toda a transformação visual.
+### 1. Weather / iluminação / atmosfera
+A base da transformação cinematográfica em 0.6.8, porque é o codec que documenta fog, céu, sol, lua, curvas de cor e nuvens.
 
-### 2. Weather / condições atmosféricas
-Chuva, tempestades, partículas atmosféricas e variações climáticas suportadas.
+### 2. Environment / contexto ambiental
+WaterTint, FluidParticles, WeatherForecasts e demais propriedades efetivamente expostas pelo codec.
 
 ### 3. Water / fluids
 Apresentação, efeitos, partículas e interação visual suportada.
@@ -662,19 +662,20 @@ Todas as decisões principais de arquitetura e escopo foram definidas.
 
 ## Implementação
 
-**FUNDAÇÃO IMPLEMENTADA — MÓDULOS VISUAIS PENDENTES**
+**FUNDAÇÃO IMPLEMENTADA — AUDITORIA REAL PREPARADA — MÓDULOS VISUAIS PENDENTES**
 
-A primeira fundação real do Asset Pack já está no repositório:
+A fundação real do Asset Pack e a infraestrutura de auditoria já estão no repositório:
 
 - `pack/manifest.json` documentado para Hytale Release 0.6.8;
 - pipeline de validação com resultados `PASS`, `WARN` e `FAIL`;
+- auditoria do `Assets.zip` real para descobrir IDs, Parent, campos e candidatos de override;
 - validação de JSON e caminhos de assets suportados;
 - detecção de referências `Parent` locais, referências externas/base e ciclos de herança;
 - empacotamento determinístico do conteúdo de `pack/`;
 - exclusão de ferramentas e arquivos de desenvolvimento do ZIP;
 - suíte automatizada atual com 15 testes passando na validação da fundação.
 
-Os módulos visuais ainda pendentes são Environment, Weather, água/fluidos, Particle Systems, Blocks/superfícies e integração em Hytale 0.6.8.
+Os módulos visuais ainda pendentes são os overrides reais de Weather/Environment, água/fluidos, Particle Systems, Blocks/superfícies e integração em Hytale 0.6.8.
 
 ## Release
 
@@ -713,3 +714,8 @@ Qualidade visual máxima, arquitetura nativa, validação rigorosa e nenhuma dep
 
 **ShadowTale — Hytale Cinematic Graphics Asset Pack**  
 **Target: Hytale Release 0.6.8**
+
+
+## Nota técnica de 0.6.8
+
+A implementação visual não vai assumir que `Environment` é o controlador de iluminação. Na referência oficial Release 0.6.8, a superfície de `Environment` é pequena, enquanto `Weather` documenta os controles ricos de céu, luz, fog, água e nuvens. O repositório registra essa distinção em `docs/specs/0.6.8-visual-codec-contract.md`.
