@@ -4,7 +4,7 @@
 
 [![Target](https://img.shields.io/badge/Hytale-0.6.8-blue)](https://docs.hytale.com/assets/)
 [![Type](https://img.shields.io/badge/Type-Asset%20Pack-purple)](#arquitetura)
-[![Status](https://img.shields.io/badge/Status-Design%20approved%20%7C%20Implementation%20not%20started-orange)](#status-atual)
+[![Status](https://img.shields.io/badge/Status-Foundation%20implemented%20%7C%20Visual%20implementation%20pending-orange)](#status-atual)
 
 ShadowTale é um **overhaul gráfico cinematográfico para Hytale**, desenvolvido exclusivamente como **Asset Pack**.
 
@@ -630,36 +630,28 @@ Essas referências definem o que é documentado. Elas não autorizam propriedade
 
 # Estrutura do projeto
 
-A organização planejada separa o conteúdo do Asset Pack das ferramentas de desenvolvimento:
+O repositório separa o conteúdo destinado ao jogador das ferramentas de desenvolvimento.
 
 ```text
 ShadowTale/
-│
-├── manifest.json
-│
-├── Server/
-│   ├── Environments/
-│   ├── Weathers/
-│   ├── Particles/
-│   └── Item/
-│       ├── Block/
-│       │   ├── Blocks/
-│       │   ├── Fluids/
-│       │   ├── FluidFX/
-│       │   ├── Particles/
-│       │   └── Sounds/
-│       └── ConnectedBlockRuleSets/
-│
-├── README.md
-│
-└── docs/
-    └── specs/
+├── pack/                         # conteúdo do Asset Pack
+│   ├── manifest.json
+│   └── Server/
+│       ├── Environments/
+│       ├── Weathers/
+│       ├── Particles/
+│       └── Item/
+│           ├── Block/
+│           │   ├── Fluids/
+│           │   └── Particles/
+│           └── ConnectedBlockRuleSets/
+├── src/                          # ferramentas de validação/empacotamento
+├── tests/                        # validação automatizada
+├── scripts/                      # comandos de desenvolvimento
+└── docs/                         # documentação e evidências
 ```
 
-Ferramentas de validação e build são consideradas parte do projeto, mas **não do Asset Pack final**.
-
----
-
+Somente o conteúdo de `pack/` é elegível para entrar no ZIP destinado ao jogador. Ferramentas, testes e documentação ficam fora do Asset Pack final.
 # Status atual
 
 ## Design
@@ -683,6 +675,7 @@ A primeira fundação real do Asset Pack já está no repositório:
 - suíte automatizada atual com 15 testes passando na validação da fundação.
 
 Os módulos visuais ainda pendentes são Environment, Weather, água/fluidos, Particle Systems, Blocks/superfícies e integração em Hytale 0.6.8.
+
 ## Release
 
 **NENHUM RELEASE DISPONÍVEL**
@@ -704,7 +697,6 @@ A fundação técnica já foi criada. A próxima fase é começar o conteúdo vi
 9. teste visual no Hytale 0.6.8;
 10. primeira release visual.
 
----
 ---
 
 # Filosofia do projeto
