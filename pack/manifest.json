@@ -1,0 +1,20 @@
+{
+  "Group": "ShadowTale",
+  "Name": "ShadowTale",
+  "Version": "0.1.0",
+  "Description": "Cinematic graphics overhaul for Hytale Release 0.6.8.",
+  "Authors": [
+    {
+      "Name": "ShadowTale Team",
+      "Email": "",
+      "Url": ""
+    }
+  ],
+  "Website": "",
+  "Dependencies": {},
+  "OptionalDependencies": {},
+  "LoadBefore": {},
+  "DisabledByDefault": false,
+  "IncludesAssetPack": false,
+  "SubPlugins": []
+}
