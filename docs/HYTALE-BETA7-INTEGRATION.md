@@ -1,21 +1,27 @@
-# DymanicTale beta.7 Hytale integration
+# DymanicTale beta.7.1 Hytale integration
 
 ## Scope
 
-This branch turns the validated camera core into an independent Hytale Java plugin. The graphics mod is intentionally outside this project and is not a dependency.
+This branch is the standalone DymanicTale camera mod. The graphics mod is a separate project and is not a dependency.
+
+## Camera profile
+
+The validated camera profile uses a +0.90 right-shoulder lateral offset, 4-block distance, and Hytale's distance-offset raycast collision. The mouse target remains block-aware so normal block interaction is preserved.
 
 ## Runtime bridge
 
-The adapter uses Hytale's server camera packet boundary and inbound movement-state packets. The default Hytale Walk state (normally Left Alt) drives the DymanicTale free-look state. While free-look is active, locomotion remains aligned to the stored body yaw while mouse input controls the camera.
+The adapter watches inbound ClientMovement packets. It reads the server-visible movementStates.walking state and the player's bodyOrientation.yaw. The default Hytale Walk key is Left Alt, so holding Walk/Alt activates free-look and releasing it restores the normal shoulder camera. The actual bridge follows the movement state, not a hard-coded keyboard event.
 
-## V key
+The protocol construction is reflection-based. This is intentional: the current official API exposes ServerCameraSettings.positionOffset as Position, while earlier generated integrations used other vector representations. Reflection keeps the final JAR from hard-linking that generated field type while still using the documented field and enum names.
 
-Hytale server plugins do not receive raw keyboard events. The documented inbound packet set exposes movement/action state rather than a raw V-key event. The server camera packet is therefore sent unlocked so native client camera switching remains available; exact V behavior must be validated against the target client build.
+## V camera switching
+
+The server plugin API does not expose a raw V-key event. SetServerCamera is sent with isLocked=false, so native client camera switching remains unlocked. Whether V remains fully functional on the target Hytale build must be confirmed by live client/server testing.
 
 ## Build dependency
 
-The Hytale Server artifact is compileOnly and is never bundled into the final JAR. The build resolves it from the Hytale release Maven repository using com.hypixel.hytale:Server:+ and Java 25.
+The Hytale Server artifact is compileOnly and is never bundled into the final JAR. The Gradle build targets Java 25 and resolves com.hypixel.hytale:Server:+ from the Hytale release repository.
 
 ## Verification boundary
 
-Local verification compiles the adapter against a minimal API stub and runs the core regression suite plus adapter tests. That proves the bridge's source-level contracts and package hygiene; it does not claim a live Hytale client/server smoke test.
+The local beta.7.1 validation compiles the adapter with strict warnings and runs a protocol reflection simulation against stubs matching the documented API names and types. This proves the bridge logic and package hygiene; it is not a substitute for a live Hytale client/server smoke test.
