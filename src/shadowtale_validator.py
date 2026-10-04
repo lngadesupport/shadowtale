@@ -26,7 +26,9 @@ SUPPORTED_ASSET_FAMILIES: tuple[tuple[str, str, str], ...] = (
     ("Server/Weathers", ".json", "Weather"),
     ("Server/Particles", ".particlesystem", "ParticleSystem"),
     ("Server/Item/Block/Fluids", ".json", "Fluid"),
+    ("Server/Item/Block/FluidFX", ".json", "FluidFX"),
     ("Server/Item/Block/Particles", ".json", "BlockParticleSet"),
+    ("Server/Item/Block/Blocks", ".json", "BlockType"),
     ("Server/Item/ConnectedBlockRuleSets", ".json", "ConnectedBlockRuleSet"),
 )
 
@@ -170,7 +172,33 @@ def _asset_scan(pack_root: Path, issues: list[ValidationIssue]) -> dict[tuple[st
     return asset_index
 
 
-def _parent_checks(pack_root: Path, asset_index: dict[tuple[str, str], Path], issues: list[ValidationIssue]) -> None:
+def load_base_asset_index(index_path: Path, expected_hytale_version: str = "0.6.8") -> set[tuple[str, str]]:
+    data = json.loads(Path(index_path).read_text(encoding="utf-8"))
+    target_version = data.get("target_hytale_version")
+    if target_version != expected_hytale_version:
+        raise ValueError(
+            f"base asset index targets Hytale {target_version!r}, expected {expected_hytale_version!r}"
+        )
+    records = data.get("records")
+    if not isinstance(records, list):
+        raise ValueError("base asset index is missing a records array")
+    resolved: set[tuple[str, str]] = set()
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        family = record.get("family")
+        asset_id = record.get("id")
+        if isinstance(family, str) and isinstance(asset_id, str) and asset_id:
+            resolved.add((family, asset_id))
+    return resolved
+
+
+def _parent_checks(
+    pack_root: Path,
+    asset_index: dict[tuple[str, str], Path],
+    issues: list[ValidationIssue],
+    base_asset_index: set[tuple[str, str]] | None = None,
+) -> None:
     parent_edges: dict[tuple[str, str], tuple[str, str]] = {}
 
     for (family, asset_id), path in sorted(asset_index.items()):
@@ -189,6 +217,8 @@ def _parent_checks(pack_root: Path, asset_index: dict[tuple[str, str], Path], is
         if parent_key in asset_index:
             parent_edges[(family, asset_id)] = parent_key
             _issue(issues, "PASS", "PARENT_RESOLVED", f"resolved local Parent reference: {parent}", path.relative_to(pack_root))
+        elif base_asset_index is not None and parent_key in base_asset_index:
+            _issue(issues, "PASS", "PARENT_BASE_RESOLVED", f"resolved base-game Parent reference: {parent}", path.relative_to(pack_root))
         else:
             _issue(
                 issues,
@@ -219,7 +249,7 @@ def _parent_checks(pack_root: Path, asset_index: dict[tuple[str, str], Path], is
         visit(node, [])
 
 
-def validate_pack(pack_root: Path) -> ValidationReport:
+def validate_pack(pack_root: Path, base_asset_index: set[tuple[str, str]] | None = None) -> ValidationReport:
     pack_root = Path(pack_root)
     issues: list[ValidationIssue] = []
     if not pack_root.exists() or not pack_root.is_dir():
@@ -228,7 +258,7 @@ def validate_pack(pack_root: Path) -> ValidationReport:
 
     _manifest_checks(pack_root, issues)
     asset_index = _asset_scan(pack_root, issues)
-    _parent_checks(pack_root, asset_index, issues)
+    _parent_checks(pack_root, asset_index, issues, base_asset_index)
     return ValidationReport(issues)
 
 

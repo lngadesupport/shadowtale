@@ -4,7 +4,7 @@ import json
 import zipfile
 from pathlib import Path
 
-from .shadowtale_validator import format_report, validate_pack
+from .shadowtale_validator import load_base_asset_index, validate_pack
 
 
 def release_name(version: str, hytale_version: str) -> str:
@@ -25,10 +25,16 @@ def _pack_files(pack_root: Path) -> list[Path]:
     return sorted(files, key=lambda value: value.as_posix())
 
 
-def build_release(pack_root: Path, output_dir: Path, hytale_version: str = "0.6.8") -> Path:
+def build_release(
+    pack_root: Path,
+    output_dir: Path,
+    hytale_version: str = "0.6.8",
+    base_index: Path | None = None,
+) -> Path:
     pack_root = Path(pack_root)
     output_dir = Path(output_dir)
-    report = validate_pack(pack_root)
+    base_asset_index = load_base_asset_index(base_index, hytale_version) if base_index is not None else None
+    report = validate_pack(pack_root, base_asset_index)
     if report.has_failures:
         raise ValueError(f"validation failed\n{format_report(report)}")
 
