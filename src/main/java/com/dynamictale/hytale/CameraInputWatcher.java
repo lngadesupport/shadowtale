@@ -3,7 +3,6 @@ package com.dynamictale.hytale;
 import com.hypixel.hytale.protocol.Packet;
 import com.hypixel.hytale.server.core.io.PacketHandler;
 import com.hypixel.hytale.server.core.io.adapter.PacketWatcher;
-import java.lang.reflect.ReflectiveOperationException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
