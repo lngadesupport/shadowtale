@@ -172,8 +172,13 @@ def _asset_scan(pack_root: Path, issues: list[ValidationIssue]) -> dict[tuple[st
     return asset_index
 
 
-def load_base_asset_index(index_path: Path) -> set[tuple[str, str]]:
+def load_base_asset_index(index_path: Path, expected_hytale_version: str = "0.6.8") -> set[tuple[str, str]]:
     data = json.loads(Path(index_path).read_text(encoding="utf-8"))
+    target_version = data.get("target_hytale_version")
+    if target_version != expected_hytale_version:
+        raise ValueError(
+            f"base asset index targets Hytale {target_version!r}, expected {expected_hytale_version!r}"
+        )
     records = data.get("records")
     if not isinstance(records, list):
         raise ValueError("base asset index is missing a records array")

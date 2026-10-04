@@ -34,7 +34,20 @@ def test_parent_resolves_from_real_asset_index(tmp_path: Path):
     index_path = tmp_path / "assets-index.json"
     index_path.write_text(json.dumps(index), encoding="utf-8")
 
-    report = validate_pack(tmp_path, load_base_asset_index(index_path))
+    report = validate_pack(tmp_path, load_base_asset_index(index_path, "0.6.8"))
 
     assert not report.has_failures
     assert any(issue.code == "PARENT_BASE_RESOLVED" for issue in report.issues)
+
+def test_parent_rejects_mismatched_base_index(tmp_path: Path):
+    make_manifest(tmp_path)
+    write_json(tmp_path / "Server" / "Weathers" / "ShadowTale_Rain.json", {"Parent": "Rain"})
+    index_path = tmp_path / "assets-index.json"
+    index_path.write_text(json.dumps({
+        "target_hytale_version": "0.6.7",
+        "records": [{"family": "Weather", "id": "Rain", "path": "Server/Weathers/Rain.json"}],
+    }), encoding="utf-8")
+
+    import pytest
+    with pytest.raises(ValueError, match="expected '0.6.8'"):
+        load_base_asset_index(index_path, "0.6.8")

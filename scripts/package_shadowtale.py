@@ -20,7 +20,7 @@ def main() -> int:
     parser.add_argument("--base-index", type=Path, default=None, help="Optional JSON index produced from the real Hytale Assets.zip")
     args = parser.parse_args()
 
-    base_asset_index = load_base_asset_index(args.base_index) if args.base_index else None
+    base_asset_index = load_base_asset_index(args.base_index, args.hytale_version) if args.base_index else None
     report = validate_pack(args.pack_root, base_asset_index)
     print(format_report(report))
     if report.has_failures:

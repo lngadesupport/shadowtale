@@ -33,7 +33,7 @@ def build_release(
 ) -> Path:
     pack_root = Path(pack_root)
     output_dir = Path(output_dir)
-    base_asset_index = load_base_asset_index(base_index) if base_index is not None else None
+    base_asset_index = load_base_asset_index(base_index, hytale_version) if base_index is not None else None
     report = validate_pack(pack_root, base_asset_index)
     if report.has_failures:
         raise ValueError(f"validation failed\n{format_report(report)}")
