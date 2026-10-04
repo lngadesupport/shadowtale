@@ -3,7 +3,6 @@ package com.dynamictale.hytale;
 import com.hypixel.hytale.protocol.MovementStates;
 import com.hypixel.hytale.protocol.Packet;
 import com.hypixel.hytale.protocol.packets.player.ClientMovement;
-import com.hypixel.hytale.protocol.packets.player.SetMovementStates;
 import com.hypixel.hytale.server.core.io.PacketHandler;
 import com.hypixel.hytale.server.core.io.adapter.PacketWatcher;
 import java.util.Map;
@@ -17,19 +16,22 @@ public final class CameraInputWatcher implements PacketWatcher {
 
     @Override
     public void accept(PacketHandler packetHandler, Packet packet) {
-        MovementStates states = movementStates(packet);
-        if (states == null || packetHandler.getAuth() == null || packetHandler.getAuth().getUuid() == null) {
+        if (!(packet instanceof ClientMovement movement)
+                || movement.movementStates == null
+                || packetHandler.getAuth() == null
+                || packetHandler.getAuth().getUuid() == null) {
             return;
         }
 
         UUID playerId = packetHandler.getAuth().getUuid();
-        CameraRuntimeSession session = sessions.computeIfAbsent(playerId, ignored -> new CameraRuntimeSession());
-        if (packet instanceof ClientMovement movement) {
-            session.updateBodyRotation(movement.bodyOrientation);
-        }
+        CameraRuntimeSession session = sessions.computeIfAbsent(
+                playerId, ignored -> new CameraRuntimeSession());
+        session.updateBodyRotation(movement.bodyOrientation);
         session.ensureApplied(packetHandler);
 
-        AltInputState altState = altStates.computeIfAbsent(playerId, ignored -> new AltInputState());
+        MovementStates states = movement.movementStates;
+        AltInputState altState = altStates.computeIfAbsent(
+                playerId, ignored -> new AltInputState());
         if (altState.updateWalking(states.walking)) {
             session.setFreeLook(packetHandler, altState.isFreeLook());
         }
@@ -43,11 +45,5 @@ public final class CameraInputWatcher implements PacketWatcher {
 
     public int sessionCount() {
         return sessions.size();
-    }
-
-    private static MovementStates movementStates(Packet packet) {
-        if (packet instanceof ClientMovement movement) return movement.movementStates;
-        if (packet instanceof SetMovementStates states) return states.movementStates;
-        return null;
     }
 }
