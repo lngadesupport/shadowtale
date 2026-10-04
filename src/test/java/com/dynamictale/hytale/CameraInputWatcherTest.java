@@ -1,6 +1,8 @@
 package com.dynamictale.hytale;
 
 import com.hypixel.hytale.protocol.ClientCameraView;
+import com.hypixel.hytale.protocol.MouseInputTargetType;
+import com.hypixel.hytale.protocol.MouseInputType;
 import com.hypixel.hytale.protocol.MovementForceRotationType;
 import com.hypixel.hytale.protocol.MovementStates;
 import com.hypixel.hytale.protocol.packets.camera.SetServerCamera;
@@ -22,8 +24,13 @@ public final class CameraInputWatcherTest {
         SetServerCamera initial = (SetServerCamera) handler.lastPacket();
         require(initial != null, "initial camera packet must be sent");
         require(initial.clientCameraView == ClientCameraView.Custom, "camera view must be custom");
-        near(3.4f, initial.cameraSettings.distance, "distance");
-        near(0.72f, initial.cameraSettings.positionOffset.x, "right shoulder");
+        require(!initial.isLocked, "V/native camera switching must remain unlocked");
+        near(4.0f, initial.cameraSettings.distance, "distance");
+        near(0.90, initial.cameraSettings.positionOffset.x, "right shoulder");
+        require(initial.cameraSettings.mouseInputTargetType == MouseInputTargetType.Block,
+                "mouse target must remain block-aware");
+        require(initial.cameraSettings.mouseInputType == MouseInputType.LookAtTargetBlock,
+                "mouse input must target blocks");
 
         ClientMovement freeLook = new ClientMovement(new MovementStates(true));
         freeLook.bodyOrientation = idle.bodyOrientation;
@@ -46,6 +53,12 @@ public final class CameraInputWatcherTest {
 
     private static void near(float expected, float actual, String message) {
         if (Math.abs(expected - actual) > 1e-5f) {
+            throw new AssertionError(message + " expected=" + expected + " actual=" + actual);
+        }
+    }
+
+    private static void near(double expected, double actual, String message) {
+        if (Math.abs(expected - actual) > 1e-9) {
             throw new AssertionError(message + " expected=" + expected + " actual=" + actual);
         }
     }
