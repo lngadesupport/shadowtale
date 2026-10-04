@@ -4,7 +4,7 @@ import json
 import zipfile
 from pathlib import Path
 
-from .shadowtale_validator import load_base_asset_index, validate_pack
+from .shadowtale_validator import format_report, load_base_asset_index, validate_pack
 
 
 def release_name(version: str, hytale_version: str) -> str:
