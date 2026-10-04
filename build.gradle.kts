@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "com.dynamictale"
-version = "0.3.0-beta7"
+version = "0.3.0-beta7.1"
 
 repositories {
     mavenCentral()
