@@ -506,7 +506,7 @@ Não deverão entrar no ZIP final:
 - documentação exclusiva do repositório;
 - arquivos de build desnecessários.
 
-> O pacote de release ainda não existe. A implementação do Asset Pack não começou.
+> A fundação do Asset Pack já existe e possui validação automatizada. O release visual ainda não existe.
 
 ---
 
@@ -670,10 +670,19 @@ Todas as decisões principais de arquitetura e escopo foram definidas.
 
 ## Implementação
 
-**AINDA NÃO INICIADA**
+**FUNDAÇÃO IMPLEMENTADA — MÓDULOS VISUAIS PENDENTES**
 
-O repositório atualmente contém a documentação inicial do projeto. Os assets e sistemas do ShadowTale ainda precisam ser implementados e validados.
+A primeira fundação real do Asset Pack já está no repositório:
 
+- `pack/manifest.json` documentado para Hytale Release 0.6.8;
+- pipeline de validação com resultados `PASS`, `WARN` e `FAIL`;
+- validação de JSON e caminhos de assets suportados;
+- detecção de referências `Parent` locais, referências externas/base e ciclos de herança;
+- empacotamento determinístico do conteúdo de `pack/`;
+- exclusão de ferramentas e arquivos de desenvolvimento do ZIP;
+- suíte automatizada atual com 15 testes passando na validação da fundação.
+
+Os módulos visuais ainda pendentes são Environment, Weather, água/fluidos, Particle Systems, Blocks/superfícies e integração em Hytale 0.6.8.
 ## Release
 
 **NENHUM RELEASE DISPONÍVEL**
@@ -682,21 +691,20 @@ Ainda não existe um ZIP oficial do ShadowTale.
 
 ## Próxima etapa
 
-A próxima fase é transformar esta especificação em um plano de implementação e, em seguida, começar pelo núcleo visual:
+A fundação técnica já foi criada. A próxima fase é começar o conteúdo visual real, nesta ordem:
 
-1. estrutura real do Asset Pack;
-2. `manifest.json`;
-3. pipeline de validação;
-4. Environment / iluminação / atmosfera;
-5. Weather;
-6. água/fluidos;
-7. Particle Systems;
-8. Blocks / superfícies;
-9. integração;
-10. empacotamento;
-11. validação limpa;
-12. primeira release.
+1. Environment / iluminação / atmosfera;
+2. Weather;
+3. água/fluidos;
+4. Particle Systems;
+5. Blocks / superfícies;
+6. integração entre módulos;
+7. validação de referências e propriedades;
+8. instalação limpa;
+9. teste visual no Hytale 0.6.8;
+10. primeira release visual.
 
+---
 ---
 
 # Filosofia do projeto
