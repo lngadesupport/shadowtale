@@ -1,0 +1,17 @@
+{
+  "Group": "DymanicTale",
+  "Name": "DymanicTale",
+  "Version": "0.3.0-beta7",
+  "Description": "Independent Hytale camera overhaul with over-the-shoulder third person and Alt free-look input bridge.",
+  "Authors": [
+    {
+      "Name": "DymanicTale"
+    }
+  ],
+  "DisabledByDefault": false,
+  "IncludesAssetPack": false,
+  "Dependencies": {},
+  "OptionalDependencies": {},
+  "ServerVersion": "*",
+  "Main": "com.dynamictale.hytale.DymanicTalePlugin"
+}
