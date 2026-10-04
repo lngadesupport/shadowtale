@@ -673,7 +673,7 @@ A fundação real do Asset Pack e a infraestrutura de auditoria já estão no re
 - detecção de referências `Parent` locais, referências externas/base e ciclos de herança;
 - empacotamento determinístico do conteúdo de `pack/`;
 - exclusão de ferramentas e arquivos de desenvolvimento do ZIP;
-- suíte automatizada atual com 15 testes passando na validação da fundação.
+- suíte automatizada com cobertura da fundação, auditoria real e resolução de Parent contra índice base.
 
 Os módulos visuais ainda pendentes são os overrides reais de Weather/Environment, água/fluidos, Particle Systems, Blocks/superfícies e integração em Hytale 0.6.8.
 
@@ -685,18 +685,20 @@ Ainda não existe um ZIP oficial do ShadowTale.
 
 ## Próxima etapa
 
-A fundação técnica já foi criada. A próxima fase é começar o conteúdo visual real, nesta ordem:
+A próxima fase depende do inventário real do Hytale 0.6.8:
 
-1. Environment / iluminação / atmosfera;
-2. Weather;
-3. água/fluidos;
-4. Particle Systems;
-5. Blocks / superfícies;
-6. integração entre módulos;
-7. validação de referências e propriedades;
+1. executar a auditoria do Assets.zip;
+2. selecionar os Weather/Environment reais;
+3. criar os primeiros overrides Parent no pack/;
+4. validar referências e propriedades contra o índice base;
+5. integrar água/fluidos;
+6. integrar Particle Systems;
+7. integrar Blocks / superfícies;
 8. instalação limpa;
 9. teste visual no Hytale 0.6.8;
 10. primeira release visual.
+
+Sem o Assets.zip real, o repositório não assume IDs vanilla e não cria overrides fictícios.
 
 ---
 
