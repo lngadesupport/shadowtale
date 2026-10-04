@@ -1,34 +1,48 @@
 # DymanicTale
 
-Camera overhaul for Hytale, currently being rebuilt from the validated beta.5 behavior and hardened core.
+Standalone Hytale camera plugin. The graphics mod is intentionally a separate project and is not a dependency of this JAR.
 
-## Current repository state
+## beta.7 integration
 
-The repository was initialized on 2026-10-04 and did not contain the original beta.5 source. The current branch therefore contains the beta.6.1 core-session hardening layer, not a fabricated replacement JAR.
+This branch adds the real Hytale plugin boundary around the validated camera core:
 
-### Core currently included
+- JavaPlugin entry point: com.dynamictale.hytale.DymanicTalePlugin
+- Server camera transport through SetServerCamera / ServerCameraSettings
+- Inbound packet watcher for client movement-state packets
+- Default Hytale Walk state (normally Left Alt) mapped to DymanicTale free-look
+- Right-shoulder third-person profile with smooth camera interpolation and raycast distance offset
+- Free-look locomotion kept aligned to body yaw
+- Hytale Server dependency kept compileOnly; it is not bundled into the final JAR
 
-- SessionController
-- CameraController
-- TransitionTicketGate
-- TransitionWatchdog
-- CameraTransition
-- immutable CameraState
-- camera invariants
-- input-generation routing
-- idempotent session lifecycle
-- confirmed right-shoulder baseline
-- stale-callback rejection
-- watchdog rollback
+## Input boundary
 
-The reconstructed core was previously validated with Java 21 and 95 regression checks.
+Hytale server plugins do not receive raw keyboard events. DymanicTale therefore uses the server-visible walking movement state for Alt/free-look instead of inventing an unsupported raw-key API.
 
-## Hytale boundary
+The V camera-switch key is not exposed as a raw inbound server packet in the documented packet set. The custom camera packet is sent unlocked so the native client camera switch remains available; exact V behavior still requires a live Hytale client/server smoke test on the target build.
 
-The Hytale adapter is intentionally separate. Official Hytale API documentation exposes ServerCameraSettings and SetServerCamera; the adapter will translate the validated core state to that API only after the exact server dependency is available.
+## Repository status
 
-True First Person local head-only visibility remains an integration item to validate in the actual client; no unsupported API is assumed.
+The original beta.5 source/JAR is still unavailable in the current workspace, so this integration is based on the validated beta.6.1 core and the documented Hytale server API. No proprietary HytaleServer.jar is committed to the repository.
 
-## Next implementation gate
+## Build
 
-To produce the real installable DymanicTale JAR, this repository needs the working beta.5 source/project or the exact HytaleServer.jar dependency used by that build. The goal is to integrate the hardened core without losing the behavior already validated in beta.5.
+Requires JDK 25 and access to the Hytale release Maven repository.
+
+    gradle build
+
+The intended output is DymanicTale-0.3.0-beta7.jar. Install the resulting JAR in the Hytale server Mods directory.
+
+## Verification
+
+Local verification uses a minimal compile-only API stub and a real production-only package step:
+
+- Java compilation with -Xlint:all -Werror: PASS
+- beta.6 core regression suite: 95/95
+- Alt input bridge test: PASS
+- camera profile test: PASS
+- packet watcher integration test: PASS
+- final JAR: no Hytale stub classes
+- final JAR: no test classes
+- plugin entry point and manifest: present
+
+This is source/package verification only. It does not claim a live Hytale runtime test.
