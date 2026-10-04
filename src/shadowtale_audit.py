@@ -16,13 +16,11 @@ ASSET_RULES = (
     ("Server/Environments", ".json", "Environment"),
     ("Server/Weathers", ".json", "Weather"),
     ("Server/Particles", ".particlesystem", "ParticleSystem"),
-    ("Server/Particles", ".particlespawner", "ParticleSpawner"),
     ("Server/Item/Block/Fluids", ".json", "Fluid"),
     ("Server/Item/Block/FluidFX", ".json", "FluidFX"),
     ("Server/Item/Block/Particles", ".json", "BlockParticleSet"),
     ("Server/Item/Block/Blocks", ".json", "BlockType"),
     ("Server/Item/ConnectedBlockRuleSets", ".json", "ConnectedBlockRuleSet"),
-    ("Server/Models", ".json", "ModelAsset"),
 )
 
 COMMON_RELEVANT_PREFIXES = (

@@ -11,7 +11,7 @@ It reads the user's original `Assets.zip` **without modifying or extracting over
 
 ## What is collected
 
-- supported server asset families and exact IDs;
+- supported 0.6.8 server asset families and exact IDs;
 - file paths, sizes and SHA-256 hashes;
 - `Parent` values;
 - discovered top-level fields for JSON-like assets;
@@ -20,6 +20,7 @@ It reads the user's original `Assets.zip` **without modifying or extracting over
 - Parent-cycle inspection;
 - relevant `Common/Sky`, `Common/ScreenEffects`, `Common/VFX` and material/texture-adjacent paths;
 - ranked candidates for Environment, Weather, Fluid, FluidFX and ParticleSystem overrides.
+- inventory of selected Common asset prefixes for follow-up inspection (these are discovery hints, not assumed codecs).
 
 The audit is intentionally inventory-first. It does **not** invent a ShadowTale asset ID and it does not generate a release package from the base-game archive.
 
